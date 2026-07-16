@@ -63,9 +63,9 @@ Route::get('/education', [EducationController::class, 'index']);
 // Admin
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
-    Route::get('/user', [UserController::class, 'index']);
-    Route::put('/user/update', [UserController::class, 'update']);
-    Route::delete('/auth/logout', [LoginController::class, 'logout']);
+Route::get('/user', [UserController::class, 'index']);
+Route::delete('/auth/logout', [LoginController::class, 'logout']);
+Route::put('/user/update', [UserController::class, 'update']);
 
     // Education
     Route::controller(EducationController::class)->prefix('education')->group(function () {

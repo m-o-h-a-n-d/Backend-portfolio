@@ -18,7 +18,7 @@ class TeamResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'track' => $this->track,
-            'logo' => secure_asset($this->logo),
+            'logo' => $this->logo ? Storage::disk('s3')->url($this->logo) : null,
             'url' => $this->url,
         ];
     }

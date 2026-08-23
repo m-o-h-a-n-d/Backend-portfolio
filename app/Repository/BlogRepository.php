@@ -8,7 +8,7 @@ class BlogRepository
 {
     public function getBlogs()
     {
-        return Blog::get();
+        return Blog::latest('created_at')->get();
     }
 
     public function getBlog($id)

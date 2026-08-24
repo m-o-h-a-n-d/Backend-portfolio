@@ -8,7 +8,7 @@ class ProjectRepository
 {
     public function getProjects()
     {
-        return Project::with(['teams' , 'service'])->get();
+        return Project::with(['teams', 'service'])->latest('created_at')->get();
     }
 
     public function getProject($id)

@@ -6,6 +6,7 @@ use App\Models\ContactUs;
 use App\Models\Setting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -16,7 +17,7 @@ class ContactUsNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected ContactUs $contactUs) {}
+    public function __construct(public ContactUs $contactUs) {}
 
     /**
      * Get the notification's delivery channels.
@@ -25,7 +26,7 @@ class ContactUsNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail' , 'broadcast'];
+        return ['mail', 'broadcast'];
     }
 
     /**
@@ -44,6 +45,22 @@ class ContactUsNotification extends Notification implements ShouldQueue
                 'companyName' => $companyName,
                 'faviconUrl' => $faviconUrl,
             ]);
+    }
+
+    /**
+     * Get the broadcastable representation of the notification.
+     */
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage([
+            'id' => $this->contactUs->id,
+            'name' => $this->contactUs->name,
+            'email' => $this->contactUs->email,
+            'subject' => $this->contactUs->subject,
+            'message' => $this->contactUs->message,
+            'read' => $this->contactUs->read,
+            'created_at' => $this->contactUs->created_at?->toISOString(),
+        ]);
     }
 
     /**

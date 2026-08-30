@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Services\ContactUsService;
 use App\Http\Requests\ContactUsRequest;
-use App\Notifications\ContactUsNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Jobs\SendContactUsNotificationJob;
+use App\Services\ContactUsService;
 
 class ContactUsController extends Controller
 {
@@ -43,10 +41,8 @@ class ContactUsController extends Controller
             return apiResponce(400, 'Bad Request');
         }
 
-        $recipients = User::query()->get();
-        if ($recipients->isNotEmpty()) {
-            Notification::send($recipients, new ContactUsNotification($contactUs));
-        }
+        // Dispatch asynchronous queue job for real-time notification & mail
+        SendContactUsNotificationJob::dispatch($contactUs);
 
         return apiResponce(200, 'Success', $contactUs);
     }

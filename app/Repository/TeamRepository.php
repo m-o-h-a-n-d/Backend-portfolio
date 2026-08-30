@@ -8,7 +8,7 @@ class TeamRepository
 {
     public function getTeams()
     {
-        return Team::get();
+        return Team::latest('created_at')->get();
     }
 
     public function getTeam($id)

@@ -5,7 +5,7 @@ echo "=============================="
 echo "🚀 Starting Laravel on Railway"
 echo "=============================="
 
-cd /var/www
+cd /var/www 2>/dev/null || cd .
 
 echo "🔐 Fixing permissions..."
 chmod -R 775 storage bootstrap/cache || true
@@ -23,6 +23,9 @@ php artisan storage:link || true
 
 echo "🛢️ Running migrations (safe)..."
 php artisan migrate --force --no-interaction || true
+
+echo "👷 Starting Queue Worker in background..."
+php artisan queue:work --tries=3 --timeout=90 &
 
 echo "✅ Bootstrapping complete"
 echo "🌐 Starting PHP server on port: ${PORT:-8080}"

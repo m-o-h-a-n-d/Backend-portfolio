@@ -44,7 +44,7 @@ class SettingService
         }
 
         if (isset($data['cv'])) {
-            $data['cv'] = $this->imageManager->uploadSingleImage($data['cv'], 'settings', 's3');
+            $data['cv'] = $this->imageManager->uploadSingleImage($data['cv'], 'settings', 's3', null, true);
             if (! $data['cv']) {
                 return false;
             }
@@ -89,7 +89,8 @@ class SettingService
                 $data['cv'],
                 'settings',
                 's3',
-                $setting->cv
+                $setting->cv,
+                true
             );
             if (! $data['cv']) {
                 return false;

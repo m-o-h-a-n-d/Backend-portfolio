@@ -11,13 +11,13 @@ class ImageManager
     /**
      * Create a new class instance.
      */
-    public function uploadSingleImage($file, $path, $disk, $oldPath = null)
+    public function uploadSingleImage($file, $path, $disk, $oldPath = null, $useOriginalName = false)
     {
         if ($file) {
             if ($oldPath) {
                 $this->deleteImageFromLocal($oldPath , $disk);
             }
-            $newImageName = $this->generateName($file, $path, $disk);
+            $newImageName = $this->generateName($file, $path, $disk, $useOriginalName);
 
             return $newImageName;
         }
@@ -25,9 +25,13 @@ class ImageManager
         return false;
     }
 
-    private function generateName($image, $path, $disk)
+    private function generateName($image, $path, $disk, $useOriginalName = false)
     {
-        $file = Str::uuid().time().'.'.$image->getClientOriginalExtension();
+        if ($useOriginalName) {
+            $file = $image->getClientOriginalName();
+        } else {
+            $file = Str::uuid().time().'.'.$image->getClientOriginalExtension();
+        }
 
         return $image->storeAs("uploads/$path", $file, ['disk' => $disk]);
 
